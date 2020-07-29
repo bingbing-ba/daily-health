@@ -1,26 +1,61 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
+import axios from 'axios'
+import './App.css'
+export default function App() {
+  const professors = [
+    '변승환',
+    '유창오',
+    '김선재',
+    '김구현',
+    '이철민',
+    '송빈산',
+    '김도영',
+    '이민교',
+  ]
 
-function App() {
+  const [selected, setSelected] = useState('')
+
+  const onSubmit = () => {
+    if (selected === '') {
+      window.alert('선택하세요!')
+      return
+    }
+
+    if (window.confirm(`선택한 "${selected}"에 설문하시겠습니까?`)) {
+      axios
+        .get(`https://daily-health.herokuapp.com/?name=${selected}`)
+        .then(({ data }) => {
+          if (data.status_code === 200) {
+            window.alert('완료되었습니다')
+          } else {
+            window.alert('뭔가 문제가 발생했어요ㅠㅠ')
+          }
+        })
+        .catch((err) => console.error(err))
+    }
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <div className="container">
+      <h3 className="text-center my-4">데일리 건강 설문</h3>
+      <div className="center">
+        <div className="inputs">
+          {professors.map((professor) => (
+            <button
+              className={selected === professor ? "btn btn-success" : "btn btn-secondary"}
+              onClick={() => {
+                setSelected(professor)
+              }}
+            >
+              {professor}
+            </button>
+          ))}
+        </div>
 
-export default App;
+        <button className="btn btn-primary" onClick={onSubmit}>
+          제출
+        </button>
+      </div>
+    </div>
+  )
+}
