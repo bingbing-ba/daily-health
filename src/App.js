@@ -5,12 +5,15 @@ export default function App() {
   const professors = [
     '변승환',
     '유창오',
-    '김선재',
     '김구현',
     '이철민',
     '송빈산',
     '김도영',
     '이민교',
+    '오창희',
+    '김준호',
+    '김재석',
+    '유태영',
   ]
 
   const [selected, setSelected] = useState('')
@@ -23,7 +26,7 @@ export default function App() {
 
     if (window.confirm(`선택한 "${selected}"에 설문하시겠습니까?`)) {
       axios
-        .get(`https://daily-health.herokuapp.com/?name=${selected}`)
+        .get(`http://ec2-100-26-218-175.compute-1.amazonaws.com/?name=${selected}`)
         .then(({ data }) => {
           if (data.status_code === 200) {
             window.alert('완료되었습니다')
