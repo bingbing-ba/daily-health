@@ -26,7 +26,7 @@ export default function App() {
 
     if (window.confirm(`선택한 "${selected}"에 설문하시겠습니까?`)) {
       axios
-        .get(`http://ec2-100-26-218-175.compute-1.amazonaws.com/?name=${selected}`)
+        .get(`https://us-central1-daily-health-e6043.cloudfunctions.net/submitForm?name=${selected}`)
         .then(({ data }) => {
           if (data.status_code === 200) {
             window.alert('완료되었습니다')
