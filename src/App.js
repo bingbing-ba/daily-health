@@ -1,86 +1,100 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { getWithExpiry, setWithExpiry } from './utils'
+
+import { SignIn, Form, Spinner, AlarmToggle } from './components'
+import {
+  getWithExpiry,
+  googleLoginRedirect,
+  checkIsLoggedInAndSetUser,
+  getToken,
+  professors,
+  BASE_URL,
+  isDev,
+} from './utils'
 import './App.css'
 export default function App() {
-  const professors = [
-    '변승환',
-    '유창오',
-    '김구현',
-    '이철민',
-    '송빈산',
-    '김도영',
-    '이민교',
-    '오창희',
-    '김준호',
-    '김재석',
-  ]
-
   const [selected, setSelected] = useState('')
-
+  const [user, setUser] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const toggleAlarm = () => {
+    if (user){
+      axios({
+        url:`${BASE_URL}/alarm`,
+        method:'POST',
+        data:{
+          uid:user.uid,
+        }
+      }).then(({data})=>{
+        if (data.status === 'ok'){
+          setUser({...user, isAlarmOn:data.isAlarmOn})
+        }
+      })
+    }
+  }
   const onSubmit = () => {
+    if (!user) {
+      window.alert('로그인이 필요합니다')
+      return
+    }
     if (selected === '') {
       window.alert('선택하세요!')
       return
     }
+    const url = `${BASE_URL}/form`
 
     if (window.confirm(`선택한 "${selected}"에 설문하시겠습니까?`)) {
       if (getWithExpiry(selected)) {
-        if (window.confirm('이미 오늘 제출하셨습니다. 계속하시겠습니까?')) {
-          axios
-            .get(
-              `https://us-central1-daily-health-e6043.cloudfunctions.net/submitForm?name=${selected}`
-            )
-            .then(({ data }) => {
-              if (data.status_code === 200) {
-                window.alert('완료되었습니다')
-              } else {
-                window.alert('뭔가 문제가 발생했어요ㅠㅠ')
-              }
-            })
-            .catch((err) => console.error(err))
+        if (!window.confirm('이미 오늘 제출하셨습니다. 계속하시겠습니까?')) {
+          return
         }
-      } else {
-        axios
-          .get(
-            `https://us-central1-daily-health-e6043.cloudfunctions.net/submitForm?name=${selected}`
-          )
-          .then(({ data }) => {
-            if (data.status_code === 200) {
-              setWithExpiry(selected)
-              window.alert('완료되었습니다')
-            } else {
-              window.alert('뭔가 문제가 발생했어요ㅠㅠ')
-            }
-          })
-          .catch((err) => console.error(err))
       }
+      axios({
+        url,
+        method: 'POST',
+        data: {
+          name: selected,
+          isDev,
+          uid: user.uid,
+        },
+      })
+        .then(({ data }) => {
+          if (data.status === 'ok') {
+            window.alert('완료되었습니다')
+          } else {
+            window.alert('뭔가 문제가 발생했어요ㅠㅠ')
+          }
+        })
+        .catch((err) => console.error(err))
     }
   }
-
+  useEffect(() => {
+    if (!user) {
+      setIsLoading(true)
+      checkIsLoggedInAndSetUser(setUser, setIsLoading)
+    } else {
+      if (user.isAlarmOn){
+        getToken(user, setUser)
+      }
+    }
+  }, [user])
   return (
     <div className="container">
       <h3 className="text-center my-4">데일리 건강 설문</h3>
-      <div className="center">
-        <div className="inputs">
-          {professors.map((professor) => (
-            <button
-              className={
-                selected === professor ? 'btn btn-success' : 'btn btn-secondary'
-              }
-              onClick={() => {
-                setSelected(professor)
-              }}
-            >
-              {professor}
-            </button>
-          ))}
-        </div>
-
-        <button className="btn btn-primary" onClick={onSubmit}>
-          제출
-        </button>
-      </div>
+      {isLoading ? (
+        <Spinner />
+      ) : user?.uid ? (
+        <>
+          <AlarmToggle isAlarmOn={user?.isAlarmOn} toggleAlarm={toggleAlarm} />
+          <Form
+            professors={professors}
+            selected={selected}
+            setSelected={setSelected}
+            onSubmit={onSubmit}
+          />
+        </>
+      ) : (
+        <SignIn onSignIn={googleLoginRedirect} />
+      )}
     </div>
   )
 }

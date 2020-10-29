@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "daily-health-e6043",
+    "dev":"daily-health-dev"
+  }
+}
