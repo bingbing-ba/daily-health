@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-
-import { SignIn, Form, Spinner, AlarmToggle } from './components'
 import {
-  getWithExpiry,
+  SignIn,
+  Form,
+  Spinner,
+  AlarmToggle,
+  ScheduleToggle,
+} from './components'
+import {
   googleLoginRedirect,
   checkIsLoggedInAndSetUser,
   getToken,
@@ -12,21 +16,22 @@ import {
   isDev,
 } from './utils'
 import './App.css'
+
 export default function App() {
   const [selected, setSelected] = useState('')
   const [user, setUser] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const toggleAlarm = () => {
-    if (user){
+    if (user) {
       axios({
-        url:`${BASE_URL}/alarm`,
-        method:'POST',
-        data:{
-          uid:user.uid,
-        }
-      }).then(({data})=>{
-        if (data.status === 'ok'){
-          setUser({...user, isAlarmOn:data.isAlarmOn})
+        url: `${BASE_URL}/alarm`,
+        method: 'POST',
+        data: {
+          uid: user.uid,
+        },
+      }).then(({ data }) => {
+        if (data.status === 'ok') {
+          setUser({ ...user, isAlarmOn: data.isAlarmOn })
         }
       })
     }
@@ -43,7 +48,7 @@ export default function App() {
     const url = `${BASE_URL}/form`
 
     if (window.confirm(`선택한 "${selected}"에 설문하시겠습니까?`)) {
-      if (getWithExpiry(selected)) {
+      if (user.submitToday) {
         if (!window.confirm('이미 오늘 제출하셨습니다. 계속하시겠습니까?')) {
           return
         }
@@ -59,6 +64,7 @@ export default function App() {
       })
         .then(({ data }) => {
           if (data.status === 'ok') {
+            setUser({ ...user, submitToday: true })
             window.alert('완료되었습니다')
           } else {
             window.alert('뭔가 문제가 발생했어요ㅠㅠ')
@@ -72,7 +78,7 @@ export default function App() {
       setIsLoading(true)
       checkIsLoggedInAndSetUser(setUser, setIsLoading)
     } else {
-      if (user.isAlarmOn){
+      if (user.isAlarmOn) {
         getToken(user, setUser)
       }
     }
@@ -95,6 +101,7 @@ export default function App() {
       ) : (
         <SignIn onSignIn={googleLoginRedirect} />
       )}
+      {user?.admin ? <ScheduleToggle /> : null}
     </div>
   )
 }

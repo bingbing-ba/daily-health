@@ -1,5 +1,10 @@
-import { initializeApp, auth, messaging as fbMessaging } from 'firebase'
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/messaging'
 import axios from 'axios'
+
+const {initializeApp, auth, messaging:fbMessaging } = firebase
+
 export const isDev = true
 
 export const getWithExpiry = (key) => {
@@ -93,8 +98,8 @@ export const professors = [
   '김재석',
 ]
 export const BASE_URL = isDev
-  ? 'https://us-central1-daily-health-dev.cloudfunctions.net/dailyHealth'
-  // ? 'http://localhost:5001/daily-health-dev/us-central1/dailyHealth'
+  ? 'https://asia-northeast3-daily-health-dev.cloudfunctions.net/dailyHealth'
+  // ? 'http://localhost:5001/daily-health-dev/asia-northeast3/dailyHealth'
   : 'https://us-central1-daily-health-e6043.cloudfunctions.net'
 
 export const checkIsLoggedInAndSetUser = (setUser, setIsLoading) => {
