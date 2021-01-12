@@ -4,16 +4,19 @@ import { getWithExpiry, setWithExpiry } from './utils'
 import './App.css'
 export default function App() {
   const professors = [
-    '변승환',
-    '유창오',
-    '김구현',
-    '이철민',
-    '송빈산',
-    '김도영',
-    '이민교',
+    '김탁희',
     '오창희',
+    '유태영',
+    '변승환',
     '김준호',
     '김재석',
+    '송빈산',
+    '김선재',
+    '이철민',
+    '이민교',
+    '유창오',
+    '김도영',
+    '김구현',
   ]
 
   const [selected, setSelected] = useState('')
