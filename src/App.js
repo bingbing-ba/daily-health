@@ -2,6 +2,10 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { getWithExpiry, setWithExpiry } from './utils'
 import './App.css'
+
+const SUBMIT_URL =
+  'https://us-central1-ssafy-health.cloudfunctions.net/submitForm'
+
 export default function App() {
   const professors = [
     { name: '김탁희', region: '서울', classNo: '1반' },
@@ -27,37 +31,30 @@ export default function App() {
       return
     }
 
-    if (window.confirm(`선택한 "${selected}"에 설문하시겠습니까?`)) {
-      if (getWithExpiry(selected)) {
-        if (window.confirm('이미 오늘 제출하셨습니다. 계속하시겠습니까?')) {
-          axios
-            .get(
-              `https://us-central1-daily-health-e6043.cloudfunctions.net/submitForm?name=${selected}`
-            )
-            .then(({ data }) => {
-              if (data.status_code === 200) {
-                window.alert('완료되었습니다')
-              } else {
-                window.alert('뭔가 문제가 발생했어요ㅠㅠ')
-              }
-            })
-            .catch((err) => console.error(err))
-        }
-      } else {
-        axios
-          .get(
-            `https://us-central1-daily-health-e6043.cloudfunctions.net/submitForm?name=${selected}`
-          )
-          .then(({ data }) => {
-            if (data.status_code === 200) {
-              setWithExpiry(selected)
-              window.alert('완료되었습니다')
-            } else {
-              window.alert('뭔가 문제가 발생했어요ㅠㅠ')
-            }
-          })
-          .catch((err) => console.error(err))
-      }
+    if (!window.confirm(`선택한 "${selected}"에 설문하시겠습니까?`)) {
+      return
+    }
+
+    if (
+      !getWithExpiry(selected) ||
+      window.confirm('이미 오늘 제출하셨어요. 계속할까요?')
+      // 오늘 아직 제출하지 않았거나 제출했는데도 한 번 더 제출하려고 할 때
+    ) {
+      axios
+        .get(`${SUBMIT_URL}?name=${selected}`)
+        .then(({ data }) => {
+          if (data.status_code === 200) {
+            window.alert('완료되었습니다')
+            setWithExpiry(selected)
+          } else {
+            window.alert('뭔가 문제가 발생했어요ㅠㅠ')
+          }
+          setSelected('')
+        })
+        .catch((err) => {
+          console.error(err)
+          setSelected('')
+        })
     }
   }
 
