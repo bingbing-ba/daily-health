@@ -16,7 +16,7 @@ jobs:
           yarn
           yarn build --if-present
       - name: install firebase
-        run: npm install firebase-tools
+        run: npm install -g firebase-tools
       - name: deploy firebase
         env:
           FIREBASE_TOKEN: ${{secrets.FIREBASE_TOKEN}}
