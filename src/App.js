@@ -7,6 +7,8 @@ const isDev =
   process.env.NODE_ENV === 'development' ||
   process.env.REACT_APP_SERVE_ENV === 'development'
 
+console.log(process.env.REACT_APP_SERVE_ENV, 'REACT_APP_SERVE_ENV')
+
 const SUBMIT_URL = isDev
   ? 'https://us-central1-ssafy-health-dev.cloudfunctions.net/submitForm'
   : 'https://us-central1-ssafy-health.cloudfunctions.net/submitForm'

@@ -14,10 +14,10 @@ jobs:
       - name: yarn install, build
         run: |
           yarn
-          yarn build --if-present
+          REACT_APP_SERVE_ENV=development yarn build --if-present
       - name: install firebase
         run: npm install -g firebase-tools
       - name: deploy firebase
         env:
           FIREBASE_TOKEN: ${{secrets.FIREBASE_TOKEN}}
-        run: REACT_APP_SERVE_ENV=development firebase deploy --only hosting --token $FIREBASE_TOKEN --project ssafy-health-dev
+        run: firebase deploy --only hosting --token $FIREBASE_TOKEN --project ssafy-health-dev
