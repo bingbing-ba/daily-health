@@ -19,5 +19,7 @@ jobs:
         env:
           FIREBASE_TOKEN: ${{secrets.FIREBASE_TOKEN}}
         run: |
+          echo $FIREBASE_TOKEN
           npm install firebase-tools
+          alias firebase="`npm config get prefix`/bin/firebase"
           REACT_APP_SERVE_ENV=development firebase deploy --only hosting --token $FIREBASE_TOKEN
