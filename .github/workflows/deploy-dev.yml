@@ -1,0 +1,23 @@
+name: Dev Deploy
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  deploy-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v2
+      - name: npm install, build
+        run: |
+          npm install
+          npm build --if-present
+      - name: deploy firebase
+        env:
+          FIREBASE_TOKEN: ${{secrets.FIREBASE_TOKEN}}
+        run: |
+          npm install firebase-tools
+          REACT_APP_SERVE_ENV=development firebase deploy --only hosting --token $FIREBASE_TOKEN
