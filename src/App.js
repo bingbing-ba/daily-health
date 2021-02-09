@@ -3,26 +3,31 @@ import axios from 'axios'
 import { getWithExpiry, setWithExpiry } from './utils'
 import './App.css'
 
-const SUBMIT_URL =
-  'https://us-central1-ssafy-health.cloudfunctions.net/submitForm'
+const isDev =
+  process.env.NODE_ENV === 'development' ||
+  process.env.REACT_APP_SERVE_ENV === 'development'
+
+const SUBMIT_URL = isDev
+  ? 'https://us-central1-ssafy-health-dev.cloudfunctions.net/submitForm'
+  : 'https://us-central1-ssafy-health.cloudfunctions.net/submitForm'
+
+const professors = [
+  { name: '김탁희', region: '서울', classNo: '1반' },
+  { name: '오창희', region: '서울', classNo: '1반' },
+  { name: '유태영', region: '서울', classNo: '2반' },
+  { name: '변승환', region: '서울', classNo: '3반' },
+  { name: '김준호', region: '서울', classNo: '4반' },
+  { name: '김재석', region: '서울', classNo: '5반' },
+  { name: '송빈산', region: '대전', classNo: '1반' },
+  { name: '김선재', region: '대전', classNo: '2반' },
+  { name: '이철민', region: '대전', classNo: '3반' },
+  { name: '이민교', region: '광주', classNo: '1반' },
+  { name: '유창오', region: '광주', classNo: '2반' },
+  { name: '김도영', region: '구미', classNo: '1반' },
+  { name: '김구현', region: '구미', classNo: '2반' },
+]
 
 export default function App() {
-  const professors = [
-    { name: '김탁희', region: '서울', classNo: '1반' },
-    { name: '오창희', region: '서울', classNo: '1반' },
-    { name: '유태영', region: '서울', classNo: '2반' },
-    { name: '변승환', region: '서울', classNo: '3반' },
-    { name: '김준호', region: '서울', classNo: '4반' },
-    { name: '김재석', region: '서울', classNo: '5반' },
-    { name: '송빈산', region: '대전', classNo: '1반' },
-    { name: '김선재', region: '대전', classNo: '2반' },
-    { name: '이철민', region: '대전', classNo: '3반' },
-    { name: '이민교', region: '광주', classNo: '1반' },
-    { name: '유창오', region: '광주', classNo: '2반' },
-    { name: '김도영', region: '구미', classNo: '1반' },
-    { name: '김구현', region: '구미', classNo: '2반' },
-  ]
-
   const [selected, setSelected] = useState('')
 
   const onSubmit = () => {
