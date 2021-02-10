@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import { initializeApp } from 'firebase-admin'
 import { getWithExpiry, setWithExpiry } from './utils'
 import './App.css'
+
+initializeApp()
 
 const isDev =
   process.env.NODE_ENV === 'development' ||
   process.env.REACT_APP_SERVE_ENV === 'development'
-
-console.log(process.env.REACT_APP_SERVE_ENV, 'REACT_APP_SERVE_ENV')
 
 const SUBMIT_URL = isDev
   ? 'https://us-central1-ssafy-health-dev.cloudfunctions.net/submitForm'
