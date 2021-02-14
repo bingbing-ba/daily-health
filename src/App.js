@@ -1,18 +1,40 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-import { initializeApp } from 'firebase-admin'
+import firebase from 'firebase/app'
+import 'firebase/auth'
+
 import { getWithExpiry, setWithExpiry } from './utils'
 import './App.css'
 
-initializeApp()
+const firebaseConfig = {
+  apiKey: "AIzaSyDAdldtN0OBY8hikjYLZxln7uZe0gdE9q0",
+  authDomain: "ssafy-health-dev.firebaseapp.com",
+  projectId: "ssafy-health-dev",
+  storageBucket: "ssafy-health-dev.appspot.com",
+  messagingSenderId: "710430201067",
+  appId: "1:710430201067:web:d333b2d042c9ec541c5aae",
+  measurementId: "G-41D46MHL0B"
+}
 
-const isDev =
-  process.env.NODE_ENV === 'development' ||
-  process.env.REACT_APP_SERVE_ENV === 'development'
+firebase.initializeApp(firebaseConfig)
 
-const SUBMIT_URL = isDev
-  ? 'https://us-central1-ssafy-health-dev.cloudfunctions.net/submitForm'
-  : 'https://us-central1-ssafy-health.cloudfunctions.net/submitForm'
+let mode = 'production'
+
+if(process.env.NODE_ENV === 'development'){
+  mode = 'local'
+}
+if(process.env.REACT_APP_SERVE_ENV === 'development'){
+  mode = 'development'
+}
+
+let submitURL = 'https://us-central1-ssafy-health.cloudfunctions.net/submitForm'
+
+if (mode === 'local'){
+  submitURL = 'http://localhost:5001/ssafy-health-dev/us-central1/submitForm'
+}
+if (mode === 'development'){
+  submitURL = 'https://us-central1-ssafy-health-dev.cloudfunctions.net/submitForm'
+}
 
 const professors = [
   { name: '김탁희', region: '서울', classNo: '1반' },
@@ -49,7 +71,7 @@ export default function App() {
       // 오늘 아직 제출하지 않았거나 제출했는데도 한 번 더 제출하려고 할 때
     ) {
       axios
-        .get(`${SUBMIT_URL}?name=${selected}`)
+        .get(`${submitURL}?name=${selected}`)
         .then(({ data }) => {
           if (data.status_code === 200) {
             window.alert('완료되었습니다')
@@ -77,7 +99,7 @@ export default function App() {
             return (
               <>
                 {region === prevRegion ? null : (
-                  <hr data-content={region} class="hr-text"></hr>
+                  <hr data-content={region} className="hr-text"></hr>
                 )}
                 <button
                   className={
