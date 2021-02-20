@@ -1,68 +1,36 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Daily Health
 
-## Available Scripts
+매일 제출해야하는 구글 폼 작성을 간편하게 하기 위한 앱
 
-In the project directory, you can run:
+배포되어 있지만, 아무나 사용하는 것을 막기위해 url은 공개하지 않습니다.
 
-### `yarn start`
+## 목적
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+매일 아침 코로나 관련 구글 설문을 작성하여 제출해야 하는데, 매일 같은 내용을 작성하는 것이 귀찮아서 쉽게 해보려고 만든 앱입니다.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+현재(21.02) dev브랜치에서 개발용 서버 분리와 추가 기능인 모바일 푸쉬 알림기능을 구현 중입니다.
 
-### `yarn test`
+## 동작 예시
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+![img](https://media.vlpt.us/images/sds564/post/bce2a13c-eae6-418f-a0ea-bec00a921b33/image.png)
 
-### `yarn build`
+팀원의 이름이 목록에 있고, 본인의 이름을 눌러서 제출 버튼을 눌러 제출합니다.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 구조
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+![daily-health-structure](README.assets/daily-health-structure.png)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 프론트엔드
 
-### `yarn eject`
+간단히 이름을 선택하고 서버에 전달하며, 제출 결과를 보여주는 역할만 합니다. 다만 편리한 사용을 위해 PWA로 모바일에서 설치하여 사용할 수 있도록 하였습니다.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### 백엔드
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+선택된 팀원에 따라 미리 작성해놓은 정보를 구글 설문지에 제출하는 요청을 보냅니다.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## 프로젝트를 진행하며 고려했던 점
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+블로그에 제가 작성한 글에서 확인하실 수 있습니다.
 
-## Learn More
+https://velog.io/@sds564/%EC%BD%94%EB%A1%9C%EB%82%98-%EA%B1%B4%EA%B0%95-%EC%84%A4%EB%AC%B8-%EC%95%B1%EC%9D%84-%EB%A7%8C%EB%93%A4%EB%A9%B4%EC%84%9Cfeat.-google-forms-react-pwa-firebase-functions
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
